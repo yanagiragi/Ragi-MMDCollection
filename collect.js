@@ -1,5 +1,7 @@
-var path = require('path'), fs=require('fs');
-
+var path = require('path')
+var fs=require('fs')
+var crypto = require('crypto')
+ 
 var container = []
 
 function fromDir(startPath, filter, callback){
@@ -21,11 +23,15 @@ function fromDir(startPath, filter, callback){
                 var previewPath = filename.substring(0, filename.length - ".pmx".length) + "_preview.jpg"
                 if(fs.existsSync(previewPath)){
                     name = (filename.lastIndexOf("\\") != -1) ? filename.substring(filename.lastIndexOf("\\") + 1, filename.length - ".pmx".length) : filename
+                    var newPath = crypto.createHash('md5').update(previewPath).digest("hex");
+
                     container.push({
                         "name" : name,
-                        "path" : filename
-                    })
-                    fs.createReadStream(previewPath).pipe(fs.createWriteStream(`Storage/${name}_preview.jpg`));
+                        "path" : filename,
+                        "img" : newPath
+                        })
+                    
+                    fs.createReadStream(previewPath).pipe(fs.createWriteStream(`Storage/${newPath}_preview.jpg`));
                 }
             };
         };
@@ -70,16 +76,18 @@ function CheckfromDir(startPath, filter, callback){
 
 var MMDpath = 'E:\\_Source\\_Models\\Pmx\\_pmx'
 
+if(process.argv[2] && process.argv[2] == "--check"){
+    CheckfromDir(MMDpath,'.pmd')
+        .then(CheckfromDir(MMDpath,'.pmx'))
+        .then(()=>{
+            console.log(JSON.stringify(container, null, 4))
+        })
+}
+else{
+    fromDir(MMDpath,'.pmd')
+        .then(fromDir(MMDpath,'.pmx'))
+        .then(()=>{
+            console.log(JSON.stringify(container, null, 4))
+        })
+}
 
-fromDir(MMDpath,'.pmd')
-    .then(fromDir(MMDpath,'.pmx'))
-    .then(()=>{
-        console.log(JSON.stringify(container, null, 4))
-    });
-
-
-/*CheckfromDir(MMDpath,'.pmd')
-    .then(CheckfromDir(MMDpath,'.pmx'))
-    .then(()=>{
-        console.log(JSON.stringify(container, null, 4))
-    });*/

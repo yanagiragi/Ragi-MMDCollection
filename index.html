@@ -75,18 +75,18 @@
 		</div>
 
 		<div class="row">
-			<div v-for="d in data" class="col s12 m3">
+			<div v-for="d in data" class="col s12 m2">
 				<div class="card">
 					<div class="card-image waves-effect waves-block waves-light">
-					  <img class="activator" v-bind:src="getPath(d.name)">
+					  <img class="activator" v-bind:src="getPath(d.img)">
 					</div>
 					<div class="card-content" style="width: 80%;">
-					  <span class="card-title activator grey-text text-darken-4" style="font-size: 17px;">
+					  <span class="card-title activator grey-text text-darken-4" v-bind:style="getFontSize(d.name)">
 					  	{{ d.name }}
-					  </span>
+					  </span>					  
 					</div>
 					<div>
-					  	<a style="margin-top: -58px; margin-right: 20px;" class="btn btn-small right halfway-fab waves-effect waves-light red modal-trigger" href="#modal1" v-on:click="preview" v-bind:value="d.name">
+					  	<a style="margin-top: -58px; margin-right: 20px;" class="btn btn-small right halfway-fab waves-effect waves-light red modal-trigger" href="#modal1" v-on:click="preview" v-bind:value="d.img">
 	      			  		Preview
 	      			  	</a>
 					  </div>
@@ -133,13 +133,15 @@
 					});
 				},
 				getPath : function (str){
-					return 'Storage\\' + encodeURIComponent(str + "_preview.jpg")
+					return 'Storage\\' + encodeURIComponent(str + '_preview.jpg')
+				},
+				getFontSize : function(str){
+					var size = 16 - ((str.length - 10) / 4)
+					return `font-size: ${size}px;`
 				},
 				preview : function(event){
 					//event.stopPropagation();
-					console.log(event.target.value)
 					previewPath = this.getPath(event.target.value)
-					console.log(previewPath)
 					this.currentPreviewImg = previewPath
 					this.currentPreviewTitle = event.target.value
 				}

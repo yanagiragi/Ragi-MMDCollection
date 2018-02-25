@@ -58,3 +58,4 @@ typings/
 .env
 
 Storage/*.jpg
+public/Storage/*.jpg
