@@ -1,0 +1,3 @@
+[submodule "MMDModelPreviewGenerator_MMM"]
+	path = MMDModelPreviewGenerator_MMM
+	url = https://github.com/yanagiragi/MMDModelPreviewGenerator_MMM
