@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8">
+	<title>Ragi Subscription</title>
+	<link rel="shortcut icon" href="icon.ico" />
+	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<!-- Compiled and minified CSS -->
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+	<style>
+		.btn-small {
+			height: 24px;
+			line-height: 24px;
+			padding: 0 0.5rem;
+			/*font-size: 0.8em;*/
+			text-transform: capitalize;
+		}
+
+		.btn-small-ex {
+			height: 21px;
+			line-height: 24px;
+			padding: 0 0.5rem;
+			margin-left: 0.5em;
+			font-size: 0.8em;
+			text-transform: capitalize;
+		}
+
+		.modal {
+			top: -10%;
+			max-height: 80%;
+		}
+
+		.display-none {
+			display: none;
+		}
+
+		.yrBtn {
+			display: inline-block;
+			width: 70px;
+		}
+	</style>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<meta name="referrer" content="no-referrer">
+</head>
+
+<body>
+	<div id="app">
+		<nav>
+			<div class="nav-wrapper teal accent-5">
+				<a href="#" class="brand-logo">
+					<div style="padding-left: 20px">
+						Ragi MMD Collection
+					</div>
+				</a>
+				<ul id="nav-mobile" class="right hide-on-med-and-down">
+                </ul>
+			</div>
+		</nav>
+
+
+		<!-- Modal Structure -->
+		<div id="modal1" class="modal">
+			<div class="modal-content">
+				<h4 style="text-alignment: center">
+					{{ currentPreviewTitle }}
+				</h4>
+				<div style="padding-top: 50px">
+					<img v-bind:src="currentPreviewImg" style="width: 100%">
+				</div>
+			</div>
+			<div class="modal-footer">
+				<a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Agree</a>
+			</div>
+		</div>
+
+		<div class="row">
+			<div v-for="d in data" class="col s12 m3">
+				<div class="card">
+					<div class="card-image waves-effect waves-block waves-light">
+					  <img class="activator" v-bind:src="getPath(d.name)">
+					</div>
+					<div class="card-content" style="width: 80%;">
+					  <span class="card-title activator grey-text text-darken-4" style="font-size: 20px;">
+					  	{{ d.name }}
+					  </span>
+					</div>
+					<div>
+					  	<a style="margin-top: -58px; margin-right: 20px;" class="btn btn-small right halfway-fab waves-effect waves-light red modal-trigger" href="#modal1" v-on:click="preview" v-bind:value="d.name">
+	      			  		Preview
+	      			  	</a>
+					  </div>
+					<div class="card-reveal">
+					  <span class="card-title grey-text text-darken-4">
+					  	{{ d.name }}
+					  	<i class="material-icons right">close</i>
+					  </span>
+					  <p>{{ d.path }}</p>
+					</div>
+						
+				</div>	
+			</div>
+		</div>
+
+
+	</div>
+
+	<script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+	<!-- Compiled and minified JavaScript -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.0.1/vue.min.js"></script>
+	<script>
+		new Vue({
+			el: '#app',
+			data: {
+				currentPreviewTitle: "",
+				currentPreviewHref: "",
+				currentPreviewImg: "",
+				data : []
+			},
+			methods: {
+				refreshData() {
+					console.log('refreshing data...');
+					$.ajax({
+						url: "./data.json",
+						dataType: "json",
+						success: function(data) {
+							this.data = data.sort((a,b) => { return a.name > b.name });
+						}.bind(this),
+						error: function(data) {
+							console.log("load json error!");
+						}
+					});
+				},
+				getPath : function (str){
+					return 'Storage\\' + encodeURIComponent(str + "_preview.jpg")
+				},
+				preview : function(event){
+					//event.stopPropagation();
+					console.log(event.target.value)
+					previewPath = this.getPath(event.target.value)
+					console.log(previewPath)
+					this.currentPreviewImg = previewPath
+					this.currentPreviewTitle = event.target.value
+				}
+			},
+			mounted: function() {
+				console.log('ready')
+				this.refreshData()
+			}
+		})
+
+		$(document).ready(function() {
+			$('.modal').modal();
+		})
+
+	</script>
+</body>
+
+</html>
