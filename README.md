@@ -8,4 +8,4 @@ A Visualize way view my MMD Model Collections
 
 * Still work in progress.
 
-* [Static Page](https://yanagiragi.github.io/Ragi-MMDCollection/)  not included actual image.
+* [Static Page](https://yanagiragi.github.io/Ragi-MMDCollection/)  not include actual image.
