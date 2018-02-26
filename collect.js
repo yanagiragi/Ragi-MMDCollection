@@ -3,6 +3,7 @@ var fs=require('fs')
 var crypto = require('crypto')
  
 var container = []
+var storagePath = 'public/Storage/'
 
 function fromDir(startPath, filter, callback){
     return new Promise((resolve, reject) => {
@@ -31,7 +32,7 @@ function fromDir(startPath, filter, callback){
                         "img" : newPath
                         })
                     
-                    fs.createReadStream(previewPath).pipe(fs.createWriteStream(`Storage/${newPath}_preview.jpg`));
+                    fs.createReadStream(previewPath).pipe(fs.createWriteStream(`${storagePath}${newPath}_preview.jpg`));
                 }
             };
         };
